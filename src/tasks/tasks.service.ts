@@ -13,7 +13,11 @@ export class TasksService {
   }
 
   getTaskById(id: string): Task | undefined {
-    return this.tasks.find(task => task.id === id);
+    const foundTask = this.tasks.find(task => task.id === id);
+    if (!foundTask) {
+      throw new NotFoundException(`Task with id ${id} not found`);
+    }
+    return foundTask;
   }
 
   getTasksWithFilters(filterDto: GetTasksFilterDto): Task[] {
@@ -33,7 +37,11 @@ export class TasksService {
   }
 
   deleteTask(id: string): void {
-    this.tasks = this.tasks.filter(task => task.id !== id);
+    const foundTask = this.getTaskById(id);
+    if (!foundTask) {
+      throw new NotFoundException(`Task with id ${id} not found`);
+    }
+    this.tasks = this.tasks.filter(task => task.id !== foundTask.id);
   }
 
   updateTaskStatus(id: string, status: TaskStatus): Task {
