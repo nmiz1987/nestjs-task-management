@@ -28,7 +28,10 @@ export class TasksService {
     tasks.forEach(task => {
       if (status && task.status === status) {
         tmp.push(task);
-      } else if ((search && task.title.includes(search)) || (search && task.description.includes(search))) {
+      } else if (
+        (search && task.title.toLocaleLowerCase().includes(search.toLocaleLowerCase())) ||
+        (search && task.description.toLocaleLowerCase().includes(search.toLocaleLowerCase()))
+      ) {
         tmp.push(task);
       }
     });
