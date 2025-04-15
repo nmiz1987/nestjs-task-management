@@ -35,28 +35,7 @@ export class TasksRepository extends Repository<Task> {
     return foundTask;
   }
 
-  // async getTasksWithFilters(filterDto: GetTasksFilterDto): Promise<Task[]> {
-  //   const { status, search } = filterDto;
-  //   const tasks = await this.find();
-  //   const tmp: Task[] = [];
-  //   tasks.forEach(task => {
-  //     if (status && task.status === status) {
-  //       tmp.push(task);
-  //     } else if (
-  //       (search && task.title.toLocaleLowerCase().includes(search.toLocaleLowerCase())) ||
-  //       (search && task.description.toLocaleLowerCase().includes(search.toLocaleLowerCase()))
-  //     ) {
-  //       tmp.push(task);
-  //     }
-  //   });
-  //   return tmp;
-  // }
-
   async deleteTask(id: string): Promise<void> {
-    // const foundTask = await this.getTaskById(id);
-    // if (!foundTask) {
-    //   throw new NotFoundException(`Task with id ${id} not found`);
-    // }
     const result = await this.delete(id);
     if (result.affected === 0) {
       throw new NotFoundException(`Task with id ${id} not found`);

@@ -13,17 +13,9 @@ export class TasksService {
     return this.tasksRepository.getTasks(filterDto);
   }
 
-  // getAllTasks(): Promise<Task[]> {
-  //   return this.tasksRepository.getAllTasks();
-  // }
-
   getTaskById(id: string): Promise<Task> {
     return this.tasksRepository.getTaskById(id);
   }
-
-  // getTasksWithFilters(filterDto: GetTasksFilterDto): Promise<Task[]> {
-  //   return this.tasksRepository.getTasksWithFilters(filterDto);
-  // }
 
   deleteTask(id: string): Promise<void> {
     return this.tasksRepository.deleteTask(id);
