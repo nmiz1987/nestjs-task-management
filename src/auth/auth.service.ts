@@ -6,7 +6,11 @@ import { AuthCredentialsDto } from './dto/auth-credentials.dto';
 export class AuthService {
   constructor(private usersRepository: UsersRepository) {}
 
-  async signUp(authCredentialsDto: AuthCredentialsDto): Promise<void> {
+  signUp(authCredentialsDto: AuthCredentialsDto): Promise<void> {
     return this.usersRepository.createUser(authCredentialsDto);
+  }
+
+  signIn(authCredentialsDto: AuthCredentialsDto): Promise<string> {
+    return this.usersRepository.signin(authCredentialsDto);
   }
 }
