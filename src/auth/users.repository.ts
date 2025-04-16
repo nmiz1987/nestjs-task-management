@@ -15,14 +15,13 @@ export class UsersRepository extends Repository<User> {
     super(User, dataSource.createEntityManager());
   }
 
-  async signin(authCredentialsDto: AuthCredentialsDto): Promise<string> {
+  async signin(authCredentialsDto: AuthCredentialsDto): Promise<{ accessToken: string }> {
     const { username, password } = authCredentialsDto;
     const user = await this.findOne({ where: { username } });
 
     if (user && (await bcrypt.compare(password, user.password))) {
       const payload: JwtPayload = { username };
       const accessToken = this.jwtService.sign(payload);
-      console.log(accessToken);
       return { accessToken };
     }
 
