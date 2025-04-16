@@ -18,8 +18,8 @@ export class TasksService {
     return this.tasksRepository.getTaskById(id, user);
   }
 
-  deleteTask(id: string): Promise<void> {
-    return this.tasksRepository.deleteTask(id);
+  deleteTask(id: string, user: User): Promise<void> {
+    return this.tasksRepository.deleteTask(id, user);
   }
 
   updateTaskStatus(id: string, status: TaskStatus, user: User): Promise<Task> {
