@@ -1,13 +1,15 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
 import { Task } from './task.entity';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { TaskStatus } from './task-status.enum';
 import { GetTasksFilterDto } from './dto/get-tasks-filter.dto';
 import { User } from 'src/auth/user.entity';
+import { Logger } from '@nestjs/common';
 
 @Injectable()
 export class TasksRepository extends Repository<Task> {
+  private logger = new Logger('TasksRepository');
   constructor(private dataSource: DataSource) {
     super(Task, dataSource.createEntityManager());
   }
@@ -25,14 +27,20 @@ export class TasksRepository extends Repository<Task> {
     if (search) {
       query.andWhere('(LOWER(task.title) LIKE LOWER(:search) OR LOWER(task.description) LIKE LOWER(:search))', { search: `%${search}%` });
     }
-
-    const tasks = await query.getMany();
-    return tasks;
+    try {
+      const tasks = await query.getMany();
+      return tasks;
+    } catch (error) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      this.logger.error(`Failed to get tasks for user "${user.username}". Filters: ${JSON.stringify(filterDto)}`, error.stack);
+      throw new InternalServerErrorException();
+    }
   }
 
   async getTaskById(id: string, user: User): Promise<Task> {
     const foundTask = await this.findOne({ where: { id, user } });
     if (!foundTask) {
+      this.logger.error(`Task with id ${id} not found`);
       throw new NotFoundException(`Task with id ${id} not found`);
     }
     return foundTask;
@@ -41,6 +49,7 @@ export class TasksRepository extends Repository<Task> {
   async deleteTask(id: string, user: User): Promise<void> {
     const result = await this.delete({ id, user });
     if (result.affected === 0) {
+      this.logger.error(`Task with id ${id} not found`);
       throw new NotFoundException(`Task with id ${id} not found`);
     }
   }
