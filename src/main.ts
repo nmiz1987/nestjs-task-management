@@ -15,9 +15,9 @@ async function mainApp() {
 }
 mainApp()
   .then(() => {
-    logger.log(`\n\n********* Server is running on port ${port} *********\n\n`);
+    logger.verbose(`***** Server is running on port ${port} *****`);
   })
   .catch(error => {
-    logger.error(`\n\n********* Server is not running *********\n\n`);
+    logger.error(`\n\n**** Server is not running ****\n\n`);
     logger.error(error);
   });
