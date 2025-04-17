@@ -9,6 +9,7 @@ const port = process.env.PORT ?? 3000;
 const logger = new Logger();
 async function mainApp() {
   const app = await NestFactory.create(AppModule);
+  app.enableCors();
   app.useGlobalPipes(new ValidationPipe());
   app.useGlobalInterceptors(new TransformInterceptor());
   await app.listen(port);

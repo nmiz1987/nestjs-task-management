@@ -8,10 +8,7 @@ import { configSchema } from 'config.schema';
   imports: [
     ConfigModule.forRoot({
       envFilePath: [`.env.stage.${process.env.STAGE}`],
-      validate: config => {
-        console.log(config);
-        return configSchema.parse(config);
-      },
+      validate: config => configSchema.parse(config),
     }),
     TasksModule,
     AuthModule,

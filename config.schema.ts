@@ -7,6 +7,7 @@ export const configSchema = z.object({
   DB_USERNAME: z.string(),
   DB_PASSWORD: z.string(),
   DB_DATABASE: z.string(),
+  JWT_SECRET: z.string().min(4),
 });
 
 export type Config = z.infer<typeof configSchema>;
