@@ -3,10 +3,15 @@ import { TasksModule } from './tasks/tasks.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { configSchema } from 'config.schema';
 @Module({
   imports: [
     ConfigModule.forRoot({
       envFilePath: [`.env.stage.${process.env.STAGE}`],
+      validate: config => {
+        console.log(config);
+        return configSchema.parse(config);
+      },
     }),
     TasksModule,
     AuthModule,
