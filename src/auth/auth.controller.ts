@@ -2,6 +2,7 @@ import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
 import { AuthCredentialsDto } from './dto/auth-credentials.dto';
 import { AuthService } from './auth.service';
 import { AuthGuard } from '@nestjs/passport';
+import { User } from './user.entity';
 
 @Controller('auth')
 export class AuthController {
@@ -21,5 +22,10 @@ export class AuthController {
   @UseGuards(AuthGuard())
   test(@Req() req) {
     console.log(req);
+  }
+
+  @Get('/get-all-users')
+  getAllUsers(): Promise<User[]> {
+    return this.authService.getAllUsers();
   }
 }

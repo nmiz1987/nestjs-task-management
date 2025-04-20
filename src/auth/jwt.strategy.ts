@@ -5,6 +5,7 @@ import { UsersRepository } from './users.repository';
 import { JwtPayload } from './jwt-payload.interface';
 import { User } from './user.entity';
 import { ConfigService } from '@nestjs/config';
+import { configEnum } from 'config.schema';
 
 /**
  * The JwtStrategy validates the token:
@@ -22,7 +23,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     private usersRepository: UsersRepository,
     private configService: ConfigService,
   ) {
-    const jwtSecret = configService.get<string>('JWT_SECRET');
+    const jwtSecret = configService.get<string>(configEnum.JWT_SECRET);
     if (!jwtSecret) {
       throw new Error('JWT_SECRET is not defined');
     }

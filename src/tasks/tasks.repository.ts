@@ -38,8 +38,6 @@ export class TasksRepository extends Repository<Task> {
   }
 
   async getTaskById(id: string, user: User): Promise<Task> {
-    console.log('***************', id, user);
-
     const foundTask = await this.findOne({ where: { id, user } });
     if (!foundTask) {
       this.logger.error(`Task with id ${id} not found`);

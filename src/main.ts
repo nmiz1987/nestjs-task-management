@@ -6,6 +6,9 @@ import { Logger } from '@nestjs/common';
 
 const port = process.env.PORT ?? 3000;
 
+// Here's a visual representation of the execution flow:
+// Request → Global Pipes → Route Handler → Global Interceptors → Response
+
 const logger = new Logger();
 async function mainApp() {
   const app = await NestFactory.create(AppModule);
