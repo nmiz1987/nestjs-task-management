@@ -6,6 +6,7 @@ import { TaskStatus } from './task-status.enum';
 import { GetTasksFilterDto } from './dto/get-tasks-filter.dto';
 import { User } from '@/auth/user.entity';
 import { Logger } from '@nestjs/common';
+import { UpdateTaskDto } from './dto/update-task.dto';
 
 @Injectable()
 export class TasksRepository extends Repository<Task> {
@@ -48,6 +49,10 @@ export class TasksRepository extends Repository<Task> {
 
   async deleteTask(id: string, user: User): Promise<void> {
     const result = await this.delete({ id, user });
+    if (!result) {
+      this.logger.error(`Task with id ${id} not found`);
+      throw new NotFoundException(`Task with id ${id} not found`);
+    }
     if (result.affected === 0) {
       this.logger.error(`Task with id ${id} not found`);
       throw new NotFoundException(`Task with id ${id} not found`);
@@ -56,6 +61,10 @@ export class TasksRepository extends Repository<Task> {
 
   async updateTaskStatus(id: string, status: TaskStatus, user: User): Promise<Task> {
     const task = await this.getTaskById(id, user);
+    if (!task) {
+      this.logger.error(`Task with id ${id} not found`);
+      throw new NotFoundException(`Task with id ${id} not found`);
+    }
     task.status = status;
     await this.save(task);
     return task;
@@ -69,6 +78,26 @@ export class TasksRepository extends Repository<Task> {
       status: TaskStatus.OPEN,
       user,
     });
+
+    await this.save(task);
+    return task;
+  }
+
+  async updateTask(id: string, updateTaskDto: UpdateTaskDto, user: User): Promise<Task> {
+    const task = await this.getTaskById(id, user);
+
+    if (!task) {
+      this.logger.error(`Task with id ${id} not found`);
+      throw new NotFoundException(`Task with id ${id} not found`);
+    }
+
+    if (updateTaskDto?.title) {
+      task.title = updateTaskDto.title;
+    }
+
+    if (updateTaskDto?.description) {
+      task.description = updateTaskDto.description;
+    }
 
     await this.save(task);
     return task;

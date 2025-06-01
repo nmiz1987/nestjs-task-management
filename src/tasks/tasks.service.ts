@@ -5,6 +5,7 @@ import { Task } from './task.entity';
 import { GetTasksFilterDto } from './dto/get-tasks-filter.dto';
 import { TaskStatus } from './task-status.enum';
 import { User } from '@/auth/user.entity';
+import { UpdateTaskDto } from './dto/update-task.dto';
 
 @Injectable()
 export class TasksService {
@@ -36,5 +37,10 @@ export class TasksService {
     this.logger.verbose(`Creating a new task for user ${user.username}. Data: ${JSON.stringify(createTaskDto)}`);
 
     return this.tasksRepository.createTask(createTaskDto, user);
+  }
+
+  updateTask(id: string, updateTaskDto: UpdateTaskDto, user: User): Promise<Task> {
+    this.logger.verbose(`Updating task with ID ${id} for user ${user.username}. Data: ${JSON.stringify(updateTaskDto)}`);
+    return this.tasksRepository.updateTask(id, updateTaskDto, user);
   }
 }
