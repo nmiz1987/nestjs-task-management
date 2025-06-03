@@ -5,12 +5,12 @@ import { CreateTaskDto } from './dto/create-task.dto';
 import { TaskStatus } from './task-status.enum';
 import { GetTasksFilterDto } from './dto/get-tasks-filter.dto';
 import { User } from '@/auth/user.entity';
-import { Logger } from '@nestjs/common';
+// import { Logger } from '@nestjs/common';
 import { UpdateTaskDto } from './dto/update-task.dto';
-
+import { MyLoggerService } from '@/my-logger/my-logger.service';
 @Injectable()
 export class TasksRepository extends Repository<Task> {
-  private logger = new Logger('TasksRepository');
+  private logger = new MyLoggerService(TasksRepository.name);
   constructor(private dataSource: DataSource) {
     super(Task, dataSource.createEntityManager());
   }
@@ -32,8 +32,7 @@ export class TasksRepository extends Repository<Task> {
       const tasks = await query.getMany();
       return tasks;
     } catch (error) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      this.logger.error(`Failed to get tasks for user "${user.username}". Filters: ${JSON.stringify(filterDto)}`, error.stack);
+      this.logger.error(`Failed to get tasks for user "${user.username}". Filters: ${JSON.stringify(filterDto)}, ${error}`);
       throw new InternalServerErrorException();
     }
   }

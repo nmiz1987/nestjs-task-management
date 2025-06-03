@@ -4,6 +4,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { configEnum, configSchema } from 'config.schema';
+import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
+import { APP_GUARD } from '@nestjs/core';
+import { MyLoggerModule } from './my-logger/my-logger.module';
+
 @Module({
   imports: [
     /**
@@ -43,6 +47,25 @@ import { configEnum, configSchema } from 'config.schema';
         database: await configService.get(configEnum.DB_DATABASE),
       }),
     }),
+    ThrottlerModule.forRoot([
+      {
+        name: 'short',
+        ttl: 60000, // 1 minute
+        limit: 3,
+      },
+      {
+        name: 'long',
+        ttl: 60000 * 5, // 5 minutes
+        limit: 100,
+      },
+    ]),
+    MyLoggerModule,
+  ],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
   ],
 })
 export class AppModule {}

@@ -1,12 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { UsersRepository } from './users.repository';
 import { AuthCredentialsDto } from './dto/auth-credentials.dto';
-import { Logger } from '@nestjs/common';
+// import { Logger } from '@nestjs/common';
 import { User } from './user.entity';
+import { MyLoggerService } from '@/my-logger/my-logger.service';
 
 @Injectable()
 export class AuthService {
-  private logger = new Logger('AuthService');
+  private logger = new MyLoggerService(AuthService.name);
 
   constructor(private usersRepository: UsersRepository) {}
 

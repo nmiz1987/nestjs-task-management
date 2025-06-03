@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { TasksRepository } from './tasks.repository';
 import { Task } from './task.entity';
@@ -6,10 +6,11 @@ import { GetTasksFilterDto } from './dto/get-tasks-filter.dto';
 import { TaskStatus } from './task-status.enum';
 import { User } from '@/auth/user.entity';
 import { UpdateTaskDto } from './dto/update-task.dto';
+import { MyLoggerService } from '@/my-logger/my-logger.service';
 
 @Injectable()
 export class TasksService {
-  private logger = new Logger('TasksService');
+  private logger = new MyLoggerService(TasksService.name);
 
   constructor(private tasksRepository: TasksRepository) {}
 

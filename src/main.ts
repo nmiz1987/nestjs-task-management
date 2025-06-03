@@ -13,6 +13,7 @@ const logger = new Logger();
 async function mainApp() {
   const app = await NestFactory.create(AppModule);
   app.enableCors();
+  app.setGlobalPrefix('api');
   app.useGlobalPipes(new ValidationPipe()); // global pipes for validation
   app.useGlobalInterceptors(new TransformInterceptor());
   await app.listen(port);
